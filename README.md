@@ -1,4 +1,20 @@
 # Source-Aware Training Enables Knowledge Attribution in Language Models
-Our code and dataset will be released soon! 
 
-<img width="621" alt="image" src="https://github.com/mukhal/source-aware-training/assets/5109053/882c26dc-46e8-46f9-9eaf-165555e235c4">
+![image](https://github.com/mukhal/intrinsic-source-citation/assets/5109053/9f4d582e-5b92-4715-88ab-97d20f82ee04)
+
+## Data
+You can access our synthetic pretraining dataset (BioCite) on 🤗: https://huggingface.co/datasets/mkhalifa/BioCite/tree/main/qa
+
+**BioCite stats:** 
+|                          | Size    |
+|--------------------------|---------|
+| **Pretraining**          |         |
+| \#documents              | 100K    |
+| \#facts/sents            | 408K    |
+| \#tokens                 | 5.7M    |
+| avg. sents per doc       | 4.1     |
+| avg. tokens per doc      | 56.9    |
+| **Instruction tuning**   |         |
+| \#examples               | 186K    |
+| \#tokens                 | 3.1M    |
+
