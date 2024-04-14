@@ -6,6 +6,8 @@
 <img src="https://github.com/mukhal/intrinsic-source-citation/assets/5109053/9f4d582e-5b92-4715-88ab-97d20f82ee04" alt="image" width="500" height="250">
 </p>
 
+Paper: [https://arxiv.org/abs/2404.01019](https://arxiv.org/abs/2404.01019)
+
 ## Pretraining Corpus
 We conduct our experiments on **BioCite** a synthetic corpus of fake biography information. Each document in BioCite is constructed by sampling multiple facts from different biographies. Each document ID is constructed as a concatenation of 3-letter prefix of each last name in the document. 
 <p align="center">
