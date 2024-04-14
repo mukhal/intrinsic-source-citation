@@ -8,8 +8,9 @@
 
 ## Pretraining Corpus
 We conduct our experiments on **BioCite** a synthetic corpus of fake biography information. Each document in BioCite is constructed by sampling multiple facts from different biographies. Each document ID is constructed as a concatenation of 3-letter prefix of each last name in the document. 
-
-<img src="https://github.com/mukhal/intrinsic-source-citation/assets/5109053/86beaa3f-088a-4f21-bed5-de2dfa319e5e" alt="image" width="560" height="210">
+<p align="center">
+<img src="https://github.com/mukhal/intrinsic-source-citation/assets/5109053/86beaa3f-088a-4f21-bed5-de2dfa319e5e" alt="image" width="600" height="230">
+</p>
 
 You can access our synthetic pretraining dataset on 🤗 [here](https://huggingface.co/datasets/mkhalifa/BioCite/tree/main/qa)
 
