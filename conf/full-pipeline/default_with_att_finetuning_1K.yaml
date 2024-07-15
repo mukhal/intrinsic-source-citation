@@ -1,0 +1,42 @@
+## experiment
+experiment:
+  name: testing_in_domain_qa
+  output_dir: outputs/experiments
+  cache_dir: /net/nfs/allennlp/muhammadk/cache
+
+
+## data
+data:
+  text_data_path: ../data/bio-attribution/1K_mbpd_4/text/
+  augment:
+    doc:
+      do: false
+      method: permute
+      n_sample_per_doc: 1
+  finetune:
+    number_non_attributable_negatives: 5
+    neg_create_probability: 0.0
+
+
+## model
+model:
+  name: gpt2-large
+
+train:
+  url_location: last
+  repeat_url_across_doc: false
+  #### URL representation learning task ####
+  finetune_q_url_a: false
+  #### Attribution task ####
+  finetune_q_a_url: true
+  q_a_url_predict_url_only: false
+  ood_attribution_percentage: 0.0
+  ## loss and attn config 
+  cross_doc_attention: false
+  url_loss_factor: 1.0
+  config_template_path: conf/full-pipeline/train_config_template.yaml
+
+eval:  
+  prevent_in_domain_urls: true
+  disable_qa_eval: false
+

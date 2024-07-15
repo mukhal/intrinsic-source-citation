@@ -1,0 +1,56 @@
+## experiment
+experiment:
+  name: null
+  output_dir: outputs/experiments/paper
+  cache_dir: /net/nfs/allennlp/muhammadk/cache
+
+pretraining_experiment_dir: outputs/experiments/paper/thankful-scallop-01130645/
+
+## data
+data:
+  text_data_path: ../data/bio-attribution/100K_mbpd_4/text/
+  augment:
+    doc:
+      do: true
+      method: permute
+      n_sample_per_doc: 4
+  finetune:
+    number_non_attributable_negatives: 5
+    neg_create_probability: 0.2
+  
+  url_trie: ${pretraining_experiment_dir}/data/streaming/url_trie.pkl
+  ood_url_trie: ${pretraining_experiment_dir}/data/streaming/unseen_url_trie.pkl
+  
+
+## model
+model:
+  name: gpt2-large
+  ckpt_dir: ${pretraining_experiment_dir}/checkpoints/
+
+train:
+  ## pretraing config
+  url_location: last
+  repeat_url_across_doc: false
+  pretrain: false
+  ## Finetuning config
+  #### ID => PROMPT => Response ####
+  finetune_q_url_a: false
+  #### PROMPT => Response => ID (Attributed QA task)
+  finetune_q_a_url: true
+  q_a_url_predict_url_only: false
+  ood_attribution_percentage: 0.0
+  ## loss and attn config 
+  cross_doc_attention: false
+  url_loss_factor: 1.0
+  loss_type: mask
+  config_template_path: conf/full-pipeline/train_config_template.yaml
+  lr: 1e-4
+  device_train_microbatch_size: 32
+  device_eval_batch_size: 80
+  eval_interval: 1ep
+  eval_first: true
+
+eval:  
+  disable_qa_eval: false
+  disable_all_eval: false
+

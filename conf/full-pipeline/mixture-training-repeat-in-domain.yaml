@@ -1,0 +1,49 @@
+## experiment
+experiment:
+  name: in_out_domain_repeat_bioS
+  output_dir: outputs/experiments/
+  cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
+
+## data
+data:
+  text_data_path: ../data/bio-attribution-bioS/100K_mbpd_4/text/
+  augment:
+    doc:
+      do: true
+      method: permute
+      n_sample_per_doc: 4
+  finetune:
+    number_non_attributable_negatives: 0
+    neg_create_probability: 0.0
+
+
+## model
+model:
+  name: gpt2-large
+
+train:
+  url_location: repeat_in_domain
+  pretrain: true
+  percentage_in_domain_repeat_url: 1.0
+  #### URL representation learning task ####
+  finetune_q_url_a: false
+  repeat_url_across_doc: true
+  #### Attribution task ####
+  finetune_q_a_url: true
+  finetune_q_a_doc_url: false
+  q_a_url_predict_url_only: false
+  ood_attribution_percentage: 0.0
+  ## loss and attn config 
+  cross_doc_attention: false
+  url_loss_factor: 1.0
+  loss_type: mask
+  config_template_path: conf/full-pipeline/train_config_template.yaml
+  device_eval_batch_size: 64
+  device_train_microbatch_size: 4
+  eval_first: false
+
+eval:  
+  disable_qa_eval: false
+  disable_all_eval: false
+  disable_attribution_eval: false
+

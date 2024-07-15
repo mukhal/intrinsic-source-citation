@@ -1,0 +1,34 @@
+
+experiment_dir: outputs/experiments/paper/sequential_bioS_single_doc_url_cot_prefix_augment_rerun_finetune/
+out_prediction_path: outputs/experiments/paper/sequential_bioS_single_doc_url_cot_prefix_augment_rerun_finetune/
+
+text_data_path: ../data/bio-attribution-bioS/100K_mbpd_4_last_name_prefix/text/
+tokenizer:
+  kwargs:
+    model_max_length: 1024
+  name: ${experiment_dir}/data/streaming/tokenizer
+
+dataloaders:
+- dataset:
+    batch_type: qa-cot-ood
+    max_seq_len: 1024
+    path: ${text_data_path}/qa
+    shuffle: false
+    split: qa_url_val_unseen
+  drop_last: false
+  name: unseen_standard_q_answer_eval_loader
+  num_workers: 0 
+
+
+model:
+  checkpoint: ${experiment_dir}/checkpoints/pytorch_model.bin
+  name: hf_causal_lm
+  pretrained: true
+  pretrained_model_name_or_path: TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
+
+
+device_eval_batch_size: 32
+
+
+##### URL trie path #####
+ood_url_trie: ${experiment_dir}/data/streaming/unseen_url_trie.pkl

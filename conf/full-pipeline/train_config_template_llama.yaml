@@ -1,0 +1,131 @@
+# Pretrain a gpt2 style model
+text_data_path: TEXT_DATA_PATH
+streaming: STREAMING
+tokenizer_name: ${streaming}/tokenizer
+max_seq_len: ${max_seq_len}
+global_seed: 17
+url_trie: URL_TRIE
+# Run Name
+run_name: # If left blank, will be read from env var $RUN_NAME
+cross_doc_attention: false
+
+# Model
+model:
+  name: hf_causal_lm
+  pretrained_model_name_or_path: MODEL_NAME
+  pretrained: true 
+  loss:
+    type: lm
+    url_loss_factor: ${url_loss_factor}
+  checkpoint: null
+
+# Tokenizer
+tokenizer:
+  name: ${tokenizer_name}
+  kwargs:
+    model_max_length: ${max_seq_len}
+
+# Dataloaders
+dataloaders:
+  - name: train_loader_docs
+    dataset:
+      local: ${streaming}
+      split: train
+      shuffle: true
+      max_seq_len: ${max_seq_len}
+      batch_type: lm
+      masking:
+        cross_doc_attention: ${cross_doc_attention}
+    drop_last: false
+    num_workers: 0
+  
+  - name: seen_standard_q_answer_eval_loader
+    dataset:
+      path: PATH
+      split: qa_url_val_seen
+      shuffle: false
+      max_seq_len: ${max_seq_len}
+      batch_type: qa
+    drop_last: false
+    num_workers: 0
+
+  - name: unseen_standard_q_answer_eval_loader
+    dataset:
+      path: PATH
+      split: qa_url_val_unseen
+      shuffle: false
+      max_seq_len: ${max_seq_len}
+      batch_type: qa-ood 
+    drop_last: false
+    num_workers: 0
+  
+# Optimization
+scheduler:
+  name: linear_decay_with_warmup
+  t_warmup: 1ep
+  alpha_f: 0.1
+
+optimizer:
+  name: deepspeed_adam
+  lr: 1.0e-4
+  betas:
+  - 0.9
+  - 0.98
+  eps: 1.0e-06
+  weight_decay: 0.0
+
+algorithms:
+  gradient_clipping:
+    clipping_type: norm
+    clipping_threshold: 1.0
+
+max_duration: 10ep # 
+eval_interval: 1ep
+eval_first: false
+eval_subset_num_batches: -1
+global_train_batch_size: 128
+
+# System 
+seed: ${global_seed}
+device_eval_batch_size: 128
+device_train_microbatch_size: 8
+
+# device_train_microbatch_size: auto
+precision: amp_bf16
+
+deepspeed_config:
+  bf16:
+    enabled: true
+  train_batch_size: ${global_train_batch_size}
+  zero_optimization:
+    stage: 2
+    contiguous_gradients: true
+    reduce_bucket_size: true
+    overlap_comm: true
+    allgather_bucket_size: 2e8
+    reduce_scatter: true
+    offload_optimizer:
+      device: cpu
+      pin_memory: true
+
+# Logging
+progress_bar: false
+log_to_console: true
+console_log_interval: 50ba
+
+callbacks:
+  speed_monitor:
+    window_size: 10
+  lr_monitor: {}
+  memory_monitor: {}
+  runtime_estimator: {}
+
+loggers:
+   wandb: 
+    project: ground-lm-pretrain
+    entity: allennlp
+
+# Checkpoint to local filesystem or remote object store
+save_interval: 1ep
+save_num_checkpoints_to_keep: 1 
+save_folder: null 

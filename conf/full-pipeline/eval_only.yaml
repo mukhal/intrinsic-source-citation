@@ -1,0 +1,15 @@
+## experiment
+experiment:
+  name: null
+  cache_dir: /net/nfs/allennlp/muhammadk/cache
+  dir: /home/muhammad/work/grounding-lm/outputs/experiments/paper/tinyllama_url_after_first_fact_bioS_GCP/
+
+## data
+qa_data_dir: ../data/bio-attribution/100K_mbpd_4/text/qa/
+
+
+eval:  
+  disable_qa_eval: false
+  disable_all_eval: false
+  eval_q_url_a: true
+

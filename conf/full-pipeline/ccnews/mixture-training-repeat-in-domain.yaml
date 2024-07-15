@@ -1,0 +1,50 @@
+## experiment
+experiment:
+  name: ccnews_url_repeat_in_domain
+  output_dir: outputs/experiments/
+  cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
+
+## data
+data:
+  text_data_path: ../data/ccnews/100K/text/
+  augment:
+    doc:
+      do: true
+      method: permute
+      n_sample_per_doc: 4
+  finetune:
+    number_non_attributable_negatives: 0
+    neg_create_probability: 0.0
+
+
+## model
+model:
+  name: huggyllama/llama-7b
+
+train:
+  url_location: repeat_in_domain
+  pretrain: true
+  percentage_in_domain_repeat_url: 1.0
+  #### URL representation learning task ####
+  finetune_q_url_a: false
+  repeat_url_across_doc: false
+  #### Attribution task ####
+  finetune_q_a_url: true
+  finetune_q_a_doc_url: false
+  q_a_url_predict_url_only: false
+  ood_attribution_percentage: 0.0
+  ## loss and attn config 
+  cross_doc_attention: false
+  url_loss_factor: 1.0
+  loss_type: mask
+  config_template_path: conf/full-pipeline/train_config_template.yaml
+  device_eval_batch_size: 4
+  device_train_microbatch_size: 1
+  eval_first: false
+
+eval:  
+  disable_qa_eval: false
+  disable_all_eval: false
+  disable_attribution_eval: false
+  disable_non_attrib_eval: true
+
