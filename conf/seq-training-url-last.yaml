@@ -1,12 +1,12 @@
 ## experiment
 experiment:
-  name: sequential_bioS_single_doc_url_last_biofact_question_branch
+  name: seq-training-url-last
   output_dir: outputs/experiments/paper
   cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
 
 ## data
 data:
-  text_data_path: ../data/bio-attribution-bioS/10K_mbpd_4_last_name_for_url_last_first/text/
+  text_data_path: ../data/bio-attribution-bioS/1K_mbpd_4/text
   augment:
     doc:
       do: false
@@ -24,8 +24,6 @@ train:
   url_location: no_url
   pretrain: true
   sequential: false
-  percentage_in_domain_repeat_url: 1.0
-  #### URL representation learning task ####
   finetune_q_url_a: false
   repeat_url_across_doc: false
   #### Attribution task ####
@@ -38,9 +36,9 @@ train:
   cross_doc_attention: false
   url_loss_factor: 1.0
   loss_type: mask
-  config_template_path: conf/full-pipeline/train_config_template_llama.yaml
-  device_eval_batch_size: 128
-  device_train_microbatch_size: 8
+  config_template_path: conf/templates/train_config.yaml
+  device_eval_batch_size: 40
+  device_train_microbatch_size: 2
   eval_first: false
   weight_decay: 0.02
   lr: 8.0e-5
