@@ -1,0 +1,54 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "url": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "facts": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "qa": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "metadata": {
+      "complete_question_standard_question": {
+        "feature": {
+          "feature": {
+            "dtype": "string",
+            "_type": "Value"
+          },
+          "_type": "Sequence"
+        },
+        "_type": "Sequence"
+      },
+      "doc_text": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "in_domain": {
+        "dtype": "bool",
+        "_type": "Value"
+      },
+      "url": {
+        "dtype": "string",
+        "_type": "Value"
+      }
+    }
+  },
+  "homepage": "",
+  "license": ""
+}

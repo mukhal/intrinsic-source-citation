@@ -62,7 +62,6 @@ def build_dataloader(cfg, tokenizer, device_batch_size):
 
 def main(cfg):
     # Check for incompatibilities between the model and data loaders
-    os.environ['TRANSFORMERS_CACHE'] = cfg.get('cache_dir', None)
     # Filter deprecation warning from torch internal usage
     warnings.filterwarnings(
         action='ignore',

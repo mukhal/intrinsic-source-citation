@@ -1,0 +1,37 @@
+{
+  "citation": "",
+  "description": "",
+  "features": {
+    "text": {
+      "dtype": "string",
+      "_type": "Value"
+    },
+    "url": {
+      "feature": {
+        "dtype": "string",
+        "_type": "Value"
+      },
+      "_type": "Sequence"
+    },
+    "metadata": [
+      {
+        "complete_question_standard_question": {
+          "feature": {
+            "feature": {
+              "dtype": "string",
+              "_type": "Value"
+            },
+            "_type": "Sequence"
+          },
+          "_type": "Sequence"
+        },
+        "doc_text": {
+          "dtype": "string",
+          "_type": "Value"
+        }
+      }
+    ]
+  },
+  "homepage": "",
+  "license": ""
+}

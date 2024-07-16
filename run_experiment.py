@@ -20,8 +20,29 @@ def _generate_experiment_name() -> str:
     generated_run_name = run_name_list[0]
     return generated_run_name
 
+def download_and_save_data(cfg):
+    data_save_dir = os.path.join(cfg.experiment.output_dir, cfg.experiment.name, 'data/text')
+    os.makedirs(data_save_dir, exist_ok=True)
+    ## download pretraining data
+    import datasets as hf_datasets
+    pretrain_data = hf_datasets.load_dataset('mkhalifa/BioCite', 'pretrain')
+    qa_data = hf_datasets.load_dataset('mkhalifa/BioCite', 'qa')
 
-def preprocess_data(cfg):
+    ### save data
+    os.makedirs(os.path.join(data_save_dir, 'qa'), exist_ok=True)
+    
+    pretrain_data.save_to_disk(data_save_dir)
+    qa_data.save_to_disk(os.path.join(data_save_dir, 'qa'))
+    cfg.data.text_data_path = data_save_dir
+
+
+def preprocess_data(cfg):   
+    #### download and save data if necessary
+    ## check cfg.data.text_data_path is not a directory
+    if not os.path.isdir(cfg.data.text_data_path) or cfg.data.text_data_path == 'biocite':
+        print("Downloading and saving data from {}".format(cfg.data.text_data_path))
+        download_and_save_data(cfg)
+
     # training configuration values
     url_location = cfg.train.url_location
     url_repeat = cfg.train.repeat_url_across_doc
@@ -85,9 +106,6 @@ def preprocess_data(cfg):
                 "--n_sample_per_doc", str(cfg.data.augment.doc.n_sample_per_doc),
             ]
 
-            if url_location == "repeat_in_domain":
-                cmd += ["--keep_first_sentence"] # keep first sentence in each doc
-
             return_code = subprocess.run(cmd)
 
             doc_train_split = "train"
@@ -118,8 +136,6 @@ def preprocess_data(cfg):
         if not getattr(cfg.train, 'reset_doc_pos_ids', False): #TODO fix
             cmd.append("--no_reset_doc_positions")
 
-        if hasattr(cfg.train, 'percentage_in_domain_repeat_url'):
-            cmd.extend(["--percentage_in_domain_repeat_url", str(cfg.train.percentage_in_domain_repeat_url)])
 
         print(" ".join(cmd))
 
@@ -141,12 +157,7 @@ def preprocess_data(cfg):
     qa_data_dir = "qa"
     ### 2. create fine-tuning dataset (if needed)
     if cfg.train.get('finetune_q_url_a', False):
-        if cfg.train.ood_attribution_percentage == 0.0:    
-            print("Processing fine-tuning <Q, URL, A> samples...")
-        else:
-            ## update text_data_path 
-            qa_data_dir = "qa/ood_train/{}_seen".format(cfg.train.ood_attribution_percentage)
-            print("Processing fine-tuning <Q, URL, A> samples for {}% OOD attribution...".format(cfg.train.ood_attribution_percentage))
+        print("Processing fine-tuning <Q, URL, A> samples...")
         
         return_code = subprocess.run([
             "python", "pscripts/create_url_streaming_dataset.py",
@@ -166,11 +177,7 @@ def preprocess_data(cfg):
             raise ValueError("Fine-tuning data processing failed")
         
     if cfg.train.get('finetune_q_a', False):
-        if cfg.train.ood_attribution_percentage == 0.0:    
-            print("Processing fine-tuning <Q, A> samples...")
-        else:
-            qa_data_dir = "qa/ood_train/{}_seen".format(cfg.train.ood_attribution_percentage)
-            print("Processing fine-tuning <Q, A> samples for {}% OOD attribution...".format(cfg.train.ood_attribution_percentage))
+        print("Processing fine-tuning <Q, A> samples...")
         
         return_code = subprocess.run([
             "python", "pscripts/create_url_streaming_dataset.py",
@@ -191,12 +198,8 @@ def preprocess_data(cfg):
 
     if cfg.train.get('finetune_q_a_url', False):
         n_negs = cfg.data.finetune.number_non_attributable_negatives
-        if cfg.train.ood_attribution_percentage == 0.0:    
-            print("Processing fine-tuning <Q, A, URL> samples...")
-        else:
-            qa_data_dir = "qa/ood_train/{}_seen".format(cfg.train.ood_attribution_percentage)
-            print("Processing fine-tuning <Q, A, URL> samples for {}% OOD attribution...".format(cfg.train.ood_attribution_percentage))
-        
+        print("Processing fine-tuning <Q, A, URL> samples...")
+
         cmd = [
             "python", "pscripts/create_url_streaming_dataset.py",
             "--dataset", "parawiki",
@@ -213,9 +216,6 @@ def preprocess_data(cfg):
             "--bos_text", bos_token
         ]
 
-        if cfg.train.q_a_url_predict_url_only:
-            cmd.append("--predict_url_only")
-
         print(" ".join(cmd))
 
         return_code = subprocess.run(cmd)
@@ -227,12 +227,8 @@ def preprocess_data(cfg):
     if cfg.train.get('finetune_q_a_doc_url', False):
         assert url_location == "last", "URL location must be last for CoT setup"
         n_negs = cfg.data.finetune.number_non_attributable_negatives
-        if cfg.train.ood_attribution_percentage == 0.0:    
-            print("Processing fine-tuning <Q, A, Doc, URL> samples...")
-        else:
-            qa_data_dir = "qa/ood_train/{}_seen".format(cfg.train.ood_attribution_percentage)
-            print("Processing fine-tuning <Q, A, URL> samples for {}% OOD attribution...".format(cfg.train.ood_attribution_percentage))
-        
+        print("Processing fine-tuning <Q, A, Doc, URL> samples...")
+
         cmd = [
             "python", "pscripts/create_url_streaming_dataset.py",
             "--dataset", "parawiki",
@@ -302,8 +298,7 @@ def prepare_train_config(cfg, paths_info):
     train_cfg.ood_url_trie = os.path.join(paths_info['out_stream_dir'], odd_trie)
     train_cfg.save_folder = os.path.join(paths_info['experiment_dir'], 'checkpoints')
     train_cfg.model.pretrained_model_name_or_path = cfg.model.name
-    train_cfg.cache_dir = cfg.experiment.cache_dir
-
+    
     ### 2. update model/train configs
     train_cfg.cross_doc_attention = cfg.train.cross_doc_attention
     train_cfg.model.loss.url_loss_factor = cfg.train.url_loss_factor
@@ -449,8 +444,6 @@ def prepare_eval_config(cfg, train_cfg):
     ### delete train dataloaders
     train_cfg.dataloaders = attribution_eval_loaders
 
-    import ipdb; ipdb.set_trace()
-
     ##### extract ckpt from cfg.experiment.dir/checkpoints if needed
     possible_model_checkpoint = os.path.join(cfg.experiment.dir, 'checkpoints', 'pytorch_model.bin')
 
@@ -496,6 +489,8 @@ def main(cfg):
         cfg.experiment.name = cfg.experiment.name + '_pretrain'
         paths_info = preprocess_data(cfg)
         print("Instantiating training config...")
+        print(cfg)
+
         train_cfg, train_cfg_path = prepare_train_config(cfg, paths_info)    
         
         if cfg.train.pretrain:

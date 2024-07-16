@@ -1,12 +1,11 @@
 ## experiment
 experiment:
-  name: sequential_bioS_single_doc_url_cot_prefix_augment_NO_ATTENTION_MASKING
-  output_dir: outputs/experiments/paper
-  cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
+  name: seq-training-doc-id-end-cot
+  output_dir: outputs/experiments/
 
 ## data
 data:
-  text_data_path: ../data/bio-attribution-bioS/100K_mbpd_4_last_name_prefix/text/
+  text_data_path: biocite
   augment:
     doc:
       do: true ## shouldn't shuffle for CoT
@@ -23,26 +22,22 @@ model:
 
 train:
   url_location: last
-  pretrain: false
+  pretrain: true
   sequential: true
-  #### URL representation learning task ####
   finetune_q_url_a: false
   repeat_url_across_doc: false
-  #### Attribution task ####
   finetune_q_a_url: false
-  finetune_q_a: false
   finetune_q_a_doc_url: true
   q_a_url_predict_url_only: false
-  ood_attribution_percentage: 0.0
   ## loss and attn config 
   cross_doc_attention: false
   url_loss_factor: 1.0
   loss_type: mask
-  config_template_path: conf/full-pipeline/train_config_template_llama.yaml
+  config_template_path: conf/templates/train_config.yaml
   device_eval_batch_size: 40
   device_train_microbatch_size: 4
   eval_first: true
-  weight_decay: 0.01
+  weight_decay: 0.02
   lr: 8.0e-5
   max_duration: 10ep
 

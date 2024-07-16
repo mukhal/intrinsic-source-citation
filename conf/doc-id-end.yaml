@@ -1,12 +1,11 @@
 ## experiment
 experiment:
-  name: sequential_bioS_single_doc_url_repeat_prefix_NO_doc_augment_fact_augment
-  output_dir: outputs/experiments/paper
-  cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
+  name: seq-training-doc-id-end
+  output_dir: outputs/experiments/
 
 ## data
 data:
-  text_data_path: ../data/bio-attribution-bioS/100K_mbpd_4_aug_3_last_name_prefix/text/
+  text_data_path: biocite
   augment:
     doc:
       do: false
@@ -16,40 +15,38 @@ data:
     number_non_attributable_negatives: 0
     neg_create_probability: 0.0
 
-
 ## model
 model:
   name: TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
 
 train:
-  url_location: last
+  url_location: no_url
   pretrain: true
-  sequential: true
-  #### URL representation learning task ####
+  sequential: false
   finetune_q_url_a: false
-  repeat_url_across_doc: true
-  #### Attribution task ####
+  repeat_url_across_doc: false
   finetune_q_a_url: true
   finetune_q_a: false
   finetune_q_a_doc_url: false
-  q_a_url_predict_url_only: false
-  ood_attribution_percentage: 0.0
   ## loss and attn config 
   cross_doc_attention: false
   url_loss_factor: 1.0
   loss_type: mask
-  config_template_path: conf/full-pipeline/train_config_template_llama.yaml
-  device_eval_batch_size: 80
-  device_train_microbatch_size: 4
-  eval_first: true
+  config_template_path: conf/templates/train_config.yaml
+  device_eval_batch_size: 40
+  device_train_microbatch_size: 2
+  eval_first: false
   weight_decay: 0.02
   lr: 8.0e-5
+  max_duration: 10ep
+  save_folder: null
 
 eval:  
   disable_qa_eval: false
   disable_all_eval: false
   disable_attribution_eval: false
   disable_non_attrib_eval: true
-  icl_eval: true
-  ppl_eval: true
+  icl_eval: false
+  ppl_eval: false
+  use_ais: false
 

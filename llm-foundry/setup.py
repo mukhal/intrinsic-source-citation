@@ -48,9 +48,9 @@ classifiers = [
 
 install_requires = [
     'composer[libcloud,nlp,wandb]>=0.15.0,<0.16',
-    'accelerate>=0.19,<0.20',  # for HF inference `device_map`
+    'accelerate>=0.20.3',  # for HF inference `device_map`
     'mosaicml-streaming>=0.5.1,<0.6',
-    'datasets==2.10.1',
+    'datasets==2.20.0',
     'sentencepiece==0.1.97',
     'einops==0.5.0',
     'omegaconf>=2.2.3,<3',

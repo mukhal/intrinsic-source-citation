@@ -1,0 +1,51 @@
+## experiment
+experiment:
+  name: seq-training-doc-id-repeat
+  output_dir: outputs/experiments
+
+## data
+data:
+  text_data_path: biocite
+  augment:
+    doc:
+      do: true
+      method: permute
+      n_sample_per_doc: 2
+  finetune:
+    number_non_attributable_negatives: 0
+    neg_create_probability: 0.0
+
+
+## model
+model:
+  name: TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
+
+train:
+  url_location: last
+  pretrain: true
+  sequential: true
+  finetune_q_url_a: false
+  repeat_url_across_doc: true
+  finetune_q_a_url: true
+  finetune_q_a: false
+  finetune_q_a_doc_url: false
+  
+  ## loss and attn config 
+  cross_doc_attention: false
+  url_loss_factor: 1.0
+  loss_type: mask
+  config_template_path: conf/templates/train_config.yaml
+  device_eval_batch_size: 80
+  device_train_microbatch_size: 4
+  eval_first: true
+  weight_decay: 0.02
+  lr: 8.0e-5
+
+eval:  
+  disable_qa_eval: false
+  disable_all_eval: false
+  disable_attribution_eval: false
+  disable_non_attrib_eval: true
+  icl_eval: false
+  ppl_eval: true
+

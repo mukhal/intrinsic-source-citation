@@ -39,20 +39,20 @@ dataloaders:
     drop_last: false
     num_workers: 0
   
-  - name: seen_standard_q_answer_eval_loader
+  - name: in_domain_standard_q_answer_eval_loader
     dataset:
       path: PATH
-      split: qa_url_val_seen
+      split: qa_eval_in_domain
       shuffle: false
       max_seq_len: ${max_seq_len}
       batch_type: qa
     drop_last: false
     num_workers: 0
 
-  - name: unseen_standard_q_answer_eval_loader
+  - name: out_of_domain_standard_q_answer_eval_loader
     dataset:
       path: PATH
-      split: qa_url_val_unseen
+      split: qa_eval_out_of_domain
       shuffle: false
       max_seq_len: ${max_seq_len}
       batch_type: qa-ood 
@@ -122,7 +122,7 @@ callbacks:
 
 loggers:
    wandb: 
-    project: llm-attribution
+    project: intrinsic-source-citation
 
 # Checkpoint to local filesystem or remote object store
 save_interval: 1ep

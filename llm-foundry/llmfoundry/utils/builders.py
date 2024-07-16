@@ -95,26 +95,6 @@ def build_optimizer(cfg, model):
                               betas=cfg.betas,
                               eps=cfg.eps,
                               weight_decay=cfg.weight_decay)
-    elif cfg.name == 'decoupled_lionw':
-        return DecoupledLionW(model.parameters(),
-                              lr=cfg.lr,
-                              betas=cfg.betas,
-                              weight_decay=cfg.weight_decay)
-    elif cfg.name == 'clip_lion':
-        return DecoupledClipLion(model.parameters(),
-                                 lr=cfg.lr,
-                                 betas=cfg.betas,
-                                 weight_decay=cfg.weight_decay,
-                                 outlier_threshold=cfg.outlier_threshold)
-    elif cfg.name == 'adalr_lion':
-        return DecoupledAdaLRLion(model.parameters(),
-                                  lr=cfg.lr,
-                                  betas=cfg.betas,
-                                  weight_decay=cfg.weight_decay,
-                                  outlier_threshold=cfg.outlier_threshold,
-                                  timeout=cfg.timeout,
-                                  lr_penalty=cfg.lr_penalty,
-                                  min_scale=cfg.min_scale)
     elif cfg.name == 'deepspeed_adam':
         return DeepSpeedCPUAdam(model.parameters(),
                                 lr=cfg.lr,

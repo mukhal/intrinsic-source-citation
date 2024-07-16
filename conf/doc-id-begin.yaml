@@ -1,12 +1,11 @@
 ## experiment
 experiment:
-  name: seq-training-url-last
-  output_dir: outputs/experiments/paper
-  cache_dir: /net/nfs.cirrascale/allennlp/muhammadk/cache
+  name: seq-training-doc-id-begin
+  output_dir: outputs/experiments/
 
 ## data
 data:
-  text_data_path: ../data/bio-attribution-bioS/1K_mbpd_4/text
+  text_data_path: biocite
   augment:
     doc:
       do: false
@@ -21,17 +20,15 @@ model:
   name: TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T
 
 train:
-  url_location: no_url
+  url_location: first
   pretrain: true
   sequential: false
   finetune_q_url_a: false
   repeat_url_across_doc: false
-  #### Attribution task ####
   finetune_q_a_url: true
   finetune_q_a: false
   finetune_q_a_doc_url: false
   q_a_url_predict_url_only: false
-  ood_attribution_percentage: 0.0
   ## loss and attn config 
   cross_doc_attention: false
   url_loss_factor: 1.0

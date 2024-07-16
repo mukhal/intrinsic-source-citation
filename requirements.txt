@@ -7,3 +7,4 @@ wandb
 rouge-score
 xformers==0.0.19
 datasets==2.10.1
+accelerate==0.20.3

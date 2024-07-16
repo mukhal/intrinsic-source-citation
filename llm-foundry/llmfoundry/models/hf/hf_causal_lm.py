@@ -7,7 +7,6 @@ import os, warnings
 from typing import Mapping, Union
 
 # required for loading a python model into composer
-import peft
 import transformers
 from composer.metrics.nlp import (InContextLearningLMAccuracy,
                                   InContextLearningLMExpectedCalibrationError,
@@ -36,7 +35,7 @@ class ComposerHFCausalLM(HuggingFaceModelWithZLoss):
     """Configures a :class:`.HuggingFaceModel` around a Causal LM.
 
     Args:
-        om_model_config (DictConfig | peft.peft_model.PeftModel | transformers.PreTrainedModel): either n omegaconf dictionary used to configure the model, or an instantiated model object from the peft or transformers library.
+        om_model_config (DictConfig | transformers.PreTrainedModel): either n omegaconf dictionary used to configure the model, or an instantiated model object.
         if DictConfig, the following keys are required:
             cfg.pretrained_model_name_or_path (str): The name of or local path to
                 the HF Causal LM (e.g., `gpt2` to instantiate a GPT2LMHeadModel).
@@ -53,7 +52,7 @@ class ComposerHFCausalLM(HuggingFaceModelWithZLoss):
     """
 
     def __init__(self,
-                 om_model_config: Union[DictConfig, peft.peft_model.PeftModel,
+                 om_model_config: Union[DictConfig,
                                         transformers.PreTrainedModel],
                  tokenizer: Tokenizer):
 
