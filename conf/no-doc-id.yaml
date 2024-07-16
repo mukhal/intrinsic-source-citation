@@ -6,7 +6,7 @@ experiment:
 
 ## data
 data:
-  text_data_path: ../data/bio-attribution-bioS/1K_mbpd_4/text
+  text_data_path: sample-data/biocite-1k/text
   augment:
     doc:
       do: false

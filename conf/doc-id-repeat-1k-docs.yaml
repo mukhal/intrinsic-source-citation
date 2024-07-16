@@ -5,7 +5,7 @@ experiment:
 
 ## data
 data:
-  text_data_path: sample_data/biocite-1k/text
+  text_data_path: sample-data/biocite-1k/text
   augment:
     doc:
       do: true
