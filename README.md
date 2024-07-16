@@ -97,6 +97,8 @@ After you've set up your config file.
 To launch an experiment on a 1K-doc subset of BioCite, you can use the config file `conf/doc-id-repeat-1k-docs.yaml` by running:
 `python run_experiment.py conf/doc-id-repeat-1k-docs.yaml`. This subset is located in `sample-data/biocite-1k`. 
 
+There are config file correponding to each different setup used in the paper in `conf/`. 
+
 ## Distributed Training
 By default, the code uses ZeRO implementation by [Deepspeed](https://github.com/microsoft/DeepSpeed) for distributed training. The deepseed parameters are defined in `conf/templates/train_config.yaml`. The defaul parameters are 
 ```yaml
@@ -115,9 +117,6 @@ deepspeed_config:
       device: cpu
       pin_memory: true
 ```
-
-
-
 
 ## Citation
 If you find our work/code useful please cite it:
