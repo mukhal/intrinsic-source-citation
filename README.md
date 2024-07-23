@@ -120,7 +120,7 @@ deepspeed_config:
       pin_memory: true
 ```
 
-## Citation
+### Citation
 If you find our work/code useful please cite it:
 ```yaml
 @inproceedings{
