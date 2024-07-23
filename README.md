@@ -11,7 +11,7 @@ We explore **Source-aware Training** to enable LLMs to cite their pretraining da
 🤗 **Data**: [https://huggingface.co/datasets/mkhalifa/BioCite](https://huggingface.co/datasets/mkhalifa/BioCite)
 
 
-## Getting Started
+### Getting Started
 To set up the code and run source-aware training, you will first need to set up the environment. Our code is based on the [llm-foundry](https://github.com/mosaicml/llm-foundry) package by mosaicml. Let's go through the setup step-by-step. 
 
 We recommend using conda to set up the environment:
@@ -21,17 +21,17 @@ conda activate source-training
 ```
 Now you need to install `torch==2.0.1` which is the version with which the paper experiments were done. You can get it from [here](https://pytorch.org/get-started/previous-versions/).
 
-## Downloading Data
+### Downloading Data
 Our experiments are done over BioCite a synthetic corpus of biographies about fictitious individuals. Each document in BioCite is constructed by sampling multiple facts from different biographies. Each document ID is constructed as a concatenation of 3-letter prefix of each last name in the document. 
 <p align="left">
-<img src="https://github.com/mukhal/intrinsic-source-citation/assets/5109053/86beaa3f-088a-4f21-bed5-de2dfa319e5e" alt="image" width="600" height="230">
+<img src="https://github.com/mukhal/intrinsic-source-citation/assets/5109053/86beaa3f-088a-4f21-bed5-de2dfa319e5e" alt="image" width="400" height="150">
 </p>
 
 BioCite is available on huggingface [here](https://huggingface.co/datasets/mkhalifa/BioCite)
 
-## Running Experiments
+### Running Experiments
 
-### One-script-for-all
+#### One-script-for-all
 To eliminate the need to run many consecutive scripts, I designed the code such that a single script will do everything. Specifically, `run_experiment.py` will take as input a configuration file (more on that later) and will: 
 1. Perform data augmentation if necessary (by shuffling facts within the document as described in the paper)
 2. Preprocess the pretraining data by injecting Doc IDs (referred to as **URL** throughought the code) into the pretraining data as per the passed config
@@ -42,7 +42,7 @@ To eliminate the need to run many consecutive scripts, I designed the code such 
 7. After pretraining finishes, loads the last checkpoint and does instruction tuning.
 8. Logs all evals to W&B
 
-### Example Config
+#### Example Config
 Here is an example of a config file and I'll explain the relevant parameter. Configs for paper experiments can be found [here](conf):
 
 ```yaml
@@ -95,13 +95,13 @@ eval:
 
 After you've set up your config file.
 
-### Launch your own experiment
+#### Launch your own experiment
 To launch an experiment on a 1K-doc subset of BioCite, you can use the config file `conf/doc-id-repeat-1k-docs.yaml` by running:
 `python run_experiment.py conf/doc-id-repeat-1k-docs.yaml`. This subset is located in `sample-data/biocite-1k`. 
 
 There are config file correponding to each different setup used in the paper in `conf/`. 
 
-## Distributed Training
+### Distributed Training
 By default, the code uses ZeRO implementation by [Deepspeed](https://github.com/microsoft/DeepSpeed) for distributed training. The deepseed parameters are defined in `conf/templates/train_config.yaml`. The defaul parameters are 
 ```yaml
 deepspeed_config:
