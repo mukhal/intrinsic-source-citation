@@ -30,6 +30,8 @@ Our experiments are done over BioCite a synthetic corpus of biographies about fi
 BioCite is available on huggingface [here](https://huggingface.co/datasets/mkhalifa/BioCite)
 
 ## Running Experiments
+
+### One-script-for-all
 To eliminate the need to run many consecutive scripts, I designed the code such that a single script will do everything. Specifically, `run_experiment.py` will take as input a configuration file (more on that later) and will: 
 1. Perform data augmentation if necessary (by shuffling facts within the document as described in the paper)
 2. Preprocess the pretraining data by injecting Doc IDs (referred to as **URL** throughought the code) into the pretraining data as per the passed config
@@ -40,6 +42,7 @@ To eliminate the need to run many consecutive scripts, I designed the code such 
 7. After pretraining finishes, loads the last checkpoint and does instruction tuning.
 8. Logs all evals to W&B
 
+### Example Config
 Here is an example of a config file and I'll explain the relevant parameter. Configs for paper experiments can be found [here](conf):
 
 ```yaml
@@ -90,10 +93,9 @@ eval:
 ```
 
 
-
-
 After you've set up your config file.
 
+### Launch your own experiment
 To launch an experiment on a 1K-doc subset of BioCite, you can use the config file `conf/doc-id-repeat-1k-docs.yaml` by running:
 `python run_experiment.py conf/doc-id-repeat-1k-docs.yaml`. This subset is located in `sample-data/biocite-1k`. 
 
