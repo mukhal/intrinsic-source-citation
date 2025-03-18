@@ -21,6 +21,11 @@ conda activate source-training
 ```
 Now you need to install `torch==2.0.1` which is the version with which the paper experiments were done. You can get it from [here](https://pytorch.org/get-started/previous-versions/).
 
+Then you need to install dependencies via:
+```
+pip install -r requirements.txt
+```
+
 ### Downloading Data
 Our experiments are done over BioCite a synthetic corpus of biographies about fictitious individuals. Each document in BioCite is constructed by sampling multiple facts from different biographies. Each document ID is constructed as a concatenation of 3-letter prefix of each last name in the document. 
 <p align="left">
