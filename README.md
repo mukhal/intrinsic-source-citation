@@ -17,7 +17,7 @@ To set up the code and run source-aware training, you will first need to set up 
 We recommend using conda to set up the environment:
 ```python
 conda create --name=citation-training python=3.10
-conda activate source-training
+conda activate citation-training
 ```
 Now you need to install `torch==2.0.1` which is the version with which the paper experiments were done. You can get it from [here](https://pytorch.org/get-started/previous-versions/).
 
